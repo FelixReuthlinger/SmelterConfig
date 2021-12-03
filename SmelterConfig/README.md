@@ -1,14 +1,5 @@
-﻿# JotunnModStub
-Upon building for release, this README.md is copied into the `Package` folder for thunderstore packaging. Remember to also edit the manifest.json and supply your own mod icon.
+﻿# Smelter Config
 
-## Installation (manual)
-
-
-## Features
-
-
-## Changelog
-
-
-## Known issues
-You can find the github at:
+Mod to simply configure your smelter and furnace. 
+With this mod the vanilla game gets easier, since you can change the amount of ore and coal storable, 
+but do not need the laggy auto-fueling.  

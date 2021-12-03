@@ -9,9 +9,9 @@ namespace SmelterConfig
     //[NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     internal class JotunnModStub : BaseUnityPlugin
     {
-        public const string PluginGUID = "com.jotunn.jotunnmodstub";
-        public const string PluginName = "JotunnModStub";
-        public const string PluginVersion = "0.0.1";
+        public const string PluginGUID = "org.bepinex.plugins.smelter.config";
+        public const string PluginName = "SmelterConfig";
+        public const string PluginVersion = "0.1.0";
         
         // Use this class to add your own localization to the game
         // https://valheim-modding.github.io/Jotunn/tutorials/localization.html
