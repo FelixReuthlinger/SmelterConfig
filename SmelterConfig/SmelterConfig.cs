@@ -13,46 +13,43 @@ namespace SmelterConfig
         public const string PluginName = "SmelterConfig";
         public const string PluginVersion = "0.1.0";
 
-        public static ConfigEntry<int> SmelterMaxOreInputCapacity;
-        public static ConfigEntry<int> SmelterMaxFuelInputCapacity;
-        public static ConfigEntry<int> SmelterFuelUsedPerProduct;
-        public static ConfigEntry<int> SmelterSecondsPerProduct;
+        private static ConfigEntry<int> _smelterMaxOreInputCapacity;
+        private static ConfigEntry<int> _smelterMaxFuelInputCapacity;
+        private static ConfigEntry<int> _smelterFuelUsedPerProduct;
+        private static ConfigEntry<int> _smelterSecondsPerProduct;
 
         private void Awake()
         {
-            string sectionName = "SmelterConfig";
+            const string smelterMaxOreInputCapacityDescription = "How much ore you can put at once into the smelter.";
+            _smelterMaxOreInputCapacity = Config.Bind(PluginName, "Maximum Ore Input Capacity", 10,
+                smelterMaxOreInputCapacityDescription);
 
-            string SmelterMaxOreInputCapacityDescription = "How much ore you can put at once into the smelter.";
-            SmelterMaxOreInputCapacity = Config.Bind(sectionName, "Maximum Ore Input Capacity", 10,
-                SmelterMaxOreInputCapacityDescription);
-
-            string SmelterMaxFuelInputCapacityDescription =
+            const string smelterMaxFuelInputCapacityDescription =
                 "How much fuel (coal) you can put at once into the smelter.";
-            SmelterMaxFuelInputCapacity = Config.Bind(sectionName, "Maximum Fuel Input Capacity", 20,
-                SmelterMaxFuelInputCapacityDescription);
-            
-            string SmelterFuelPerProductDescription =
-                "How many fuel items are consumed for one output product.";
-            SmelterFuelUsedPerProduct = Config.Bind(sectionName, "Fuel Per Product Consumption", 2,
-                SmelterFuelPerProductDescription);
-            
-            string SmelterSecondsPerProductDescription =
+            _smelterMaxFuelInputCapacity = Config.Bind(PluginName, "Maximum Fuel Input Capacity", 20,
+                smelterMaxFuelInputCapacityDescription);
+
+            const string smelterFuelPerProductDescription = "How many fuel items are consumed for one output product.";
+            _smelterFuelUsedPerProduct = Config.Bind(PluginName, "Fuel Per Product Consumption", 2,
+                smelterFuelPerProductDescription);
+
+            const string smelterSecondsPerProductDescription =
                 "How many seconds it will take to create one output product.";
-            SmelterSecondsPerProduct = Config.Bind(sectionName, "Seconds Per Product Duration", 30,
-                SmelterSecondsPerProductDescription);
+            _smelterSecondsPerProduct = Config.Bind(PluginName, "Seconds Per Product Duration", 30,
+                smelterSecondsPerProductDescription);
 
             ItemManager.OnItemsRegistered += ConfigureSmelter;
         }
 
-        private void ConfigureSmelter()
+        private static void ConfigureSmelter()
         {
             try
             {
-                Smelter smelterPrefab = PrefabManager.Cache.GetPrefab<Smelter>("smelter");
-                smelterPrefab.m_maxOre = SmelterMaxOreInputCapacity.Value;
-                smelterPrefab.m_maxFuel = SmelterMaxFuelInputCapacity.Value;
-                smelterPrefab.m_fuelPerProduct = SmelterFuelUsedPerProduct.Value;
-                smelterPrefab.m_secPerProduct = SmelterSecondsPerProduct.Value;
+                var smelterPrefab = PrefabManager.Cache.GetPrefab<Smelter>("smelter");
+                smelterPrefab.m_maxOre = _smelterMaxOreInputCapacity.Value;
+                smelterPrefab.m_maxFuel = _smelterMaxFuelInputCapacity.Value;
+                smelterPrefab.m_fuelPerProduct = _smelterFuelUsedPerProduct.Value;
+                smelterPrefab.m_secPerProduct = _smelterSecondsPerProduct.Value;
             }
             catch (Exception ex)
             {
