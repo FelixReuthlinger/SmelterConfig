@@ -1,45 +1,68 @@
-﻿using BepInEx;
-using Jotunn.Entities;
+﻿using System;
+using BepInEx;
+using BepInEx.Configuration;
 using Jotunn.Managers;
 
 namespace SmelterConfig
 {
-    [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
+    [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
     [BepInDependency(Jotunn.Main.ModGuid)]
     //[NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
-    internal class JotunnModStub : BaseUnityPlugin
+    internal class SmelterConfigPlugin : BaseUnityPlugin
     {
-        public const string PluginGUID = "org.bepinex.plugins.smelter.config";
+        public const string PluginGuid = "org.bepinex.plugins.smelter.config";
         public const string PluginName = "SmelterConfig";
         public const string PluginVersion = "0.1.0";
-        
-        // Use this class to add your own localization to the game
-        // https://valheim-modding.github.io/Jotunn/tutorials/localization.html
-        public static CustomLocalization Localization = LocalizationManager.Instance.GetLocalization();
+
+        public static ConfigEntry<int> SmelterMaxOreInputCapacity;
+        public static ConfigEntry<int> SmelterMaxFuelInputCapacity;
+        public static ConfigEntry<int> SmelterFuelUsedPerProduct;
+        public static ConfigEntry<int> SmelterSecondsPerProduct;
 
         private void Awake()
         {
-            // Jotunn comes with MonoMod Detours enabled for hooking Valheim's code
-            // https://github.com/MonoMod/MonoMod
-            On.FejdStartup.Awake += FejdStartup_Awake;
+            string sectionName = "SmelterConfig";
+
+            string SmelterMaxOreInputCapacityDescription = "How much ore you can put at once into the smelter.";
+            SmelterMaxOreInputCapacity = Config.Bind(sectionName, "Maximum Ore Input Capacity", 10,
+                SmelterMaxOreInputCapacityDescription);
+
+            string SmelterMaxFuelInputCapacityDescription =
+                "How much fuel (coal) you can put at once into the smelter.";
+            SmelterMaxFuelInputCapacity = Config.Bind(sectionName, "Maximum Fuel Input Capacity", 10,
+                SmelterMaxFuelInputCapacityDescription);
             
-            // Jotunn comes with its own Logger class to provide a consistent Log style for all mods using it
-            Jotunn.Logger.LogInfo("ModStub has landed");
+            string SmelterFuelPerProductDescription =
+                "How many fuel items are consumed for one output product.";
+            SmelterFuelUsedPerProduct = Config.Bind(sectionName, "Fuel Per Product Consumption", 4,
+                SmelterFuelPerProductDescription);
             
-            // To learn more about Jotunn's features, go to
-            // https://valheim-modding.github.io/Jotunn/tutorials/overview.html
+            string SmelterSecondsPerProductDescription =
+                "How many seconds it will take to create one output product.";
+            SmelterSecondsPerProduct = Config.Bind(sectionName, "Seconds Per Product Duration", 10,
+                SmelterSecondsPerProductDescription);
+
+            ItemManager.OnItemsRegistered += ConfigureSmelter;
         }
 
-        private void FejdStartup_Awake(On.FejdStartup.orig_Awake orig, FejdStartup self)
+        private void ConfigureSmelter()
         {
-            // This code runs before Valheim's FejdStartup.Awake
-            Jotunn.Logger.LogInfo("FejdStartup is going to awake");
-
-            // Call this method so the original game method is invoked
-            orig(self);
-
-            // This code runs after Valheim's FejdStartup.Awake
-            Jotunn.Logger.LogInfo("FejdStartup has awoken");
+            try
+            {
+                Smelter smelterPrefab = PrefabManager.Cache.GetPrefab<Smelter>("smelter");
+                smelterPrefab.m_maxOre = SmelterMaxOreInputCapacity.Value;
+                smelterPrefab.m_maxFuel = SmelterMaxFuelInputCapacity.Value;
+                smelterPrefab.m_fuelPerProduct = SmelterFuelUsedPerProduct.Value;
+                smelterPrefab.m_secPerProduct = SmelterSecondsPerProduct.Value;
+            }
+            catch (Exception ex)
+            {
+                Jotunn.Logger.LogError($"Error while configuring smelter: {ex.Message}");
+            }
+            finally
+            {
+                ItemManager.OnItemsRegistered -= ConfigureSmelter;
+            }
         }
     }
 }
