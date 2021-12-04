@@ -1,10 +1,10 @@
 ﻿{
-  "name": "JotunnModStub",
-  "description": "",
-  "version_number": "0.0.1",
-  "website_url": "",
+  "name": "SmelterConfig",
+  "description": "Simplest configurations for smelter.",
+  "version_number": "0.1.0",
+  "website_url": "https://github.com/FelixReuthlinger/SmelterConfig",
   "dependencies": [
-    "denikson-BepInExPack_Valheim-5.4.1502",
-    ""
+    "ValheimModding-Jotunn-2.4.1",
+    "denikson-BepInExPack_Valheim-5.4.1601"
   ]
 }

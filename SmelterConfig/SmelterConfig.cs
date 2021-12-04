@@ -7,7 +7,6 @@ namespace SmelterConfig
 {
     [BepInPlugin(PluginGuid, PluginName, PluginVersion)]
     [BepInDependency(Jotunn.Main.ModGuid)]
-    //[NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.Minor)]
     internal class SmelterConfigPlugin : BaseUnityPlugin
     {
         public const string PluginGuid = "org.bepinex.plugins.smelter.config";
@@ -29,17 +28,17 @@ namespace SmelterConfig
 
             string SmelterMaxFuelInputCapacityDescription =
                 "How much fuel (coal) you can put at once into the smelter.";
-            SmelterMaxFuelInputCapacity = Config.Bind(sectionName, "Maximum Fuel Input Capacity", 10,
+            SmelterMaxFuelInputCapacity = Config.Bind(sectionName, "Maximum Fuel Input Capacity", 20,
                 SmelterMaxFuelInputCapacityDescription);
             
             string SmelterFuelPerProductDescription =
                 "How many fuel items are consumed for one output product.";
-            SmelterFuelUsedPerProduct = Config.Bind(sectionName, "Fuel Per Product Consumption", 4,
+            SmelterFuelUsedPerProduct = Config.Bind(sectionName, "Fuel Per Product Consumption", 2,
                 SmelterFuelPerProductDescription);
             
             string SmelterSecondsPerProductDescription =
                 "How many seconds it will take to create one output product.";
-            SmelterSecondsPerProduct = Config.Bind(sectionName, "Seconds Per Product Duration", 10,
+            SmelterSecondsPerProduct = Config.Bind(sectionName, "Seconds Per Product Duration", 30,
                 SmelterSecondsPerProductDescription);
 
             ItemManager.OnItemsRegistered += ConfigureSmelter;
